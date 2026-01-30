@@ -1,0 +1,8 @@
+# Ignore changes in JVM files
+lab1/cdim -diff
+
+# Ignore changes in Notes.md
+lab1/Notes.md -diff
+
+# Ignore patch files storing git diffs
+*.patch
