@@ -2,7 +2,7 @@
 
 ## Grammar
 
-This is the grammar for the language Cdim11 (for jazz fans):
+This is the grammar for the language Cdim (for music fans):
 
 <pre>
 Program -> Stmts 'EOF'
