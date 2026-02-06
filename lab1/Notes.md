@@ -47,7 +47,7 @@ There are also "block" statements such as "{a = 2; b = 3;}" and the interpretati
 
 As indicated above, the only type here is the integer type. Negative integers are evaluated through the '-' unary operator.
 
-Variables labelled by 'IDENT' store integer values and are all mutable, and 'IDENT' '=' Expr ';' statements assign them these values. If the statement "a = -2;" is executed then a variable called "a" should store the integer value -2. It is not specified what value an 'IDENT' has if it has not been assigned one before an expression containing 'IDENT' is evaluated. For example if the program is "a = b + 2; print(a);" then "b" has not been assigned a value; what should be evaluated and/or executed? This should be determined by your implementation and explained below in the notes for Exercise 2.
+Variables labelled by 'IDENT' store integer values and are all mutable, and 'IDENT' '=' Expr ';' statements assign them values. If the statement "a = -2;" is executed then a variable called "a" should store the integer value -2. It is not specified what value an 'IDENT' has if it has not been assigned one before an expression containing 'IDENT' is evaluated. For example if the program is "a = b + 2; print(a);" then "b" has not been assigned a value; what should be evaluated and/or executed? This should be determined by your implementation and explained below in the notes for Exercise 3.
 
 The 'PRINT' statement should print the value of the expression (as a string) to the command line followed by '\n' or a new line character. Scala has the built-in println function for this.
 
