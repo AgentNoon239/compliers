@@ -107,7 +107,7 @@ class Parser (val tokens: Lexer) {
 
 	/* CalcExpr -> Term CalcExpr2 */
 	/* CalcExpr2 -> BINOP(op) Term CalcExpr2 | epsilon */
-	/* for op being the order of precedence of addition */
+	/* for op having the order of precedence of addition */
 
 	private def calcExpr(): Expr = {
 		calcExpr2(term())
@@ -125,7 +125,7 @@ class Parser (val tokens: Lexer) {
 
 	/* Term -> Factor Term2 */
 	/* Term2 -> BINOP(op) Factor Term2 | epsilon */
-	/* for op being the order of precedence of multiplication */
+	/* for op having the order of precedence of multiplication */
 
 	private def term(): Expr = {
 		term2(factor())

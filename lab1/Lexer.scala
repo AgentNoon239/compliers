@@ -61,8 +61,8 @@ class Lexer(val source: Iterator[String]) extends Iterator[Token] {
 			case ';' => SEMICOLON
 			/* double characters */
 			case '!' => {if (isMatch('=')) RELOP(BANG_EQUAL) else BANG}
-			case '&' => {if (isMatch('&')) BINOP(AND) else throw new Exception}
-			case '|' => {if (isMatch('|')) BINOP(OR) else throw new Exception}
+			case '&' => {if (isMatch('&')) BINOP(AND) else throw ParserException(s"Should be && on line $line at " + chunk.slice(start,current))}
+			case '|' => {if (isMatch('|')) BINOP(OR) else throw ParserException(s"Should be || on line $line at " + chunk.slice(start,current))}
 			case '=' => {if (isMatch('=')) RELOP(EQUAL_EQUAL) else EQUAL}
 			case '<' => {if (isMatch('=')) RELOP(LESS_EQUAL) else RELOP(LESS)}
 			case '>' => {if (isMatch('=')) RELOP(GREATER_EQUAL) else RELOP(GREATER)}
