@@ -36,7 +36,9 @@ case object SEMICOLON extends Token {
 	override def toString: String = ";"
 }
 case object BANG extends Token
-case object EQUAL extends Token
+case object EQUAL extends Token {
+	override def toString: String = "="
+}
 case class RELOP(operation: Op) extends Token
 case class BINOP(operation: Op) extends Token
 case class IDENT(name: String) extends Token
