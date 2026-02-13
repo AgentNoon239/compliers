@@ -29,15 +29,10 @@ class Parser (val tokens: Lexer) {
 		currentToken match {
 			case LEFT_BRACE => {advance(); val stmts = block(); consume(RIGHT_BRACE); stmts}
 			case PRINT => {advance(); parsePrint()}
-			case IDENT(name) => {
-				advance()
-				consume(EQUAL)
-				val e = expr()
-				consume(SEMICOLON)
-				AssignStmt(name, e)
-			}
+			case IDENT(name) => {parseIdent(name)}
 			case IF => {advance(); parseIf()}
 			case WHILE => {advance(); parseWhile()}
+			case FOR => {advance(); parseFor()}
 			case SEMICOLON => {advance(); EmptyStmt}
 			case _ => throw ParserException("Syntax error on line " + tokens.line + ": expected a statement or ';'")
 		}
@@ -53,6 +48,14 @@ class Parser (val tokens: Lexer) {
 		if (stmt_list.isEmpty) return EmptyStmt
 		else if (stmt_list.length == 1) return stmt_list(0)
 		else SeqStmt(stmt_list)
+	}
+
+	private def parseIdent(name: String): AssignStmt = {
+		advance()
+		consume(EQUAL)
+		val e = expr()
+		consume(SEMICOLON)
+		AssignStmt(name, e)
 	}
 
 	/* Parses print statements */
@@ -84,6 +87,18 @@ class Parser (val tokens: Lexer) {
 		WhileStmt(cond, parseStmt())
 	}
 
+	private def parseFor(): Stmt = {
+		consume(LEFT_PAREN)
+		val iterator = currentToken match {
+			case IDENT(name) => parseIdent(name)
+			case _ => throw ParserException("Expected ident")
+		}
+		val exprf = expr()
+		consume(SEMICOLON)
+		val exprinc = expr()
+		consume(RIGHT_PAREN)
+		ForStmt(iterator.name, iterator.expr, exprf, exprinc, parseStmt())
+	}
 
 	/* The grammar in the specification in Notes.md is left-recursive so not appropriate */
 
@@ -95,10 +110,27 @@ class Parser (val tokens: Lexer) {
 	   the tree (first production) or just return the input as output for the other production */
 
 	private def expr(): Expr = {
-		expr2(calcExpr())
+		expr2(logicExpr())
 	}
 
-	private def expr2(e: Expr): Expr = {
+	private def expr2(exprcond: Expr): Expr = {
+		currentToken match {
+			case QUESTION_MARK => {
+				advance(); 
+				val exprt = logicExpr();
+				consume(COLON);
+				val exprf = logicExpr();
+				TernaryExpr(exprcond,exprt,exprf)
+			}
+			case _ => exprcond
+		}
+	}
+
+	private def logicExpr(): Expr = {
+		logicExpr2(calcExpr())
+	}
+
+	private def logicExpr2(e: Expr): Expr = {
 		currentToken match {
 			case RELOP(op) => {advance(); expr2(BinaryExpr(e, op, calcExpr()))}
 			case _ => e
@@ -120,6 +152,20 @@ class Parser (val tokens: Lexer) {
 			case BINOP(ADD) => {advance(); calcExpr2(BinaryExpr(e, ADD, term()))}
 			case BINOP(OR) => {advance(); calcExpr2(BinaryExpr(e, OR, term()))}
 			case _ => e
+		}
+	}
+
+	private def choices(): (Expr,Expr) = {
+		choices2(expr())
+	}
+
+	private def choices2(e: Expr): (Expr,Expr) = {
+		currentToken match {
+			case COLON => {
+				advance(); 
+				(e,expr())
+			}
+			case _ => throw ParserException("Syntax error expected : in ternary statement")
 		}
 	}
 
@@ -153,14 +199,14 @@ class Parser (val tokens: Lexer) {
 			case NUMBER(value) => {advance(); Num(value)}
 			case MINUS => {advance(); UnaryExpr(UMINUS, factor())}
 			case BANG => {advance(); UnaryExpr(NOT, factor())}
-			case _ => throw ParserException("Syntax error on line " + tokens.line + ": expected '(', variable or number")
+			case _ => throw ParserException("Syntax error on line " + tokens.line + ": expected '(', variable or number found " + currentToken.toString)
 		}
 	}
 
 	/* Helper function that consumes a token if it matches */
 
 	private def consume(tok: Token): Unit = {
-		if (tok == currentToken) advance() else throw ParserException("Syntax error on line " + tokens.line + ": expected '" + tok.toString +"'")
+		if (tok == currentToken) advance() else throw ParserException("Syntax error on line " + tokens.line + ": expected '" + tok.toString +"' found " + currentToken.toString)
 	}
 
 	/* Advances through the token stream */

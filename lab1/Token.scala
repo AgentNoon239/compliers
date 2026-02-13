@@ -35,6 +35,12 @@ case object MINUS extends Token
 case object SEMICOLON extends Token {
 	override def toString: String = ";"
 }
+case object QUESTION_MARK extends Token {
+	override def toString: String = "?"
+}
+case object COLON extends Token {
+	override def toString: String = ":"
+}
 case object BANG extends Token
 case object EQUAL extends Token {
 	override def toString: String = "="

@@ -17,7 +17,9 @@ Stmt -> 'IDENT' '=' Expr ';'
 	| 'IF' '(' Expr ')' Stmt 'ELSE' Stmt
 	| 'PRINT' '(' Expr ')' ';'
 	| ';'
-Expr -> Expr Relop CalcExpr
+Expr -> Expr '?' LogicExpr ':' LogicExpr
+	| LogicExpr
+LogicExpr -> LogicExpr Relop CalcExpr
 	| CalcExpr
 CalcExpr -> CalcExpr '-' Term
 	| CalcExpr '+' Term

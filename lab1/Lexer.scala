@@ -59,6 +59,8 @@ class Lexer(val source: Iterator[String]) extends Iterator[Token] {
 			case '+' => BINOP(ADD)
 			case '*' => BINOP(TIMES)
 			case ';' => SEMICOLON
+			case '?' => QUESTION_MARK
+			case ':' => COLON
 			/* double characters */
 			case '!' => {if (isMatch('=')) RELOP(BANG_EQUAL) else BANG}
 			case '&' => {if (isMatch('&')) BINOP(AND) else throw ParserException(s"Should be && on line $line at " + chunk.slice(start,current))}
