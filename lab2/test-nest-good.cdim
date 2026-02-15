@@ -1,0 +1,21 @@
+int mid, left, right, number;
+number = 45;
+left = 0;
+right = 100;
+mid = (left + right) / 2;
+while ((right - left) < 1) {
+	if (mid == number) {
+		bool i;
+		{	
+			int i;
+			i = 42;
+			print(i);
+		}
+	} else {
+		if (mid < number) {
+			left = mid + 1;
+		} else {
+			right = mid - 1;
+		}
+	}
+}
