@@ -57,12 +57,6 @@ case class WhileStmt(expr: Expr, stmt: Stmt) extends Stmt {
 	}
 }
 
-case class ForStmt(ident: String, expri: Expr, exprf: Expr, exprinc: Expr, stmt: Stmt) extends Stmt {
-	def pretty(margin: String): String = {
-		margin + "for (" + ident + " = "  + expri.pretty + "; " + exprf.pretty + "; +" + exprinc.pretty + ")" + "\n" + stmt.pretty(margin + "   ")
-	}
-}
-
 case class TernaryExpr(exprcond: Expr, exprt: Expr, exprf: Expr) extends Expr {
 	def pretty: String = {
 		exprcond.pretty + " ? " + exprt.pretty + " : " + exprf.pretty

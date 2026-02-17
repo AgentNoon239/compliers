@@ -24,11 +24,29 @@ class Semantic (val prog: Prog) {
 	private def checkStmt(stmt: Stmt, env: HashMap[String, Stype]): Unit = {
 		stmt match {
 			case PrintStmt(expr) => ()
-			case WhileStmt(expr, stmt) => ()
-			case IfStmt(expr, thenStmt, elseStmt)  => ()
-			case AssignStmt(expr1, expr2) => ()
-			case SeqStmt(stmt_list) => ()
-			case BlockStmt(decl_list, stmt) => ()
+			case WhileStmt(expr, stmt) => {
+				checkExpr(expr, env)
+				checkStmt(stmt, env)
+			}
+			case IfStmt(expr, thenStmt, elseStmt)  => {
+				checkExpr(expr, env)
+				checkStmt(thenStmt, env)
+				checkStmt(elseStmt, env)
+			}
+			case AssignStmt(expr1, expr2) => {
+				checkExpr(expr1, env)
+				checkExpr(expr2, env)
+			}
+			case SeqStmt(stmt_list) => {
+				stmt_list.foreach(i => checkStmt(i, env))
+			}
+			case BlockStmt(decl_list, stmt) => {
+				val innerHmap = new HashMap[String, Stype]()
+				decl_list.foreach(i => {
+					innerHmap(i.name) = i.stype
+				})
+				checkStmt(stmt, env.concat(innerHmap))
+			}
 			case EmptyStmt => ()
 		}
 	}

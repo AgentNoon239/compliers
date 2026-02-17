@@ -65,19 +65,24 @@ The 'FOR' statement for concreteness is "for (name = expr1; expr2; expr3) stmt".
 
 -- Use this space to give a clear and concise description of the for loop statement.
 
+Created parseIdent for creating assignStmts. Take the first bit of the for loop (i=0) as an assignStmt. Then convert the next part into a conditional expr. Create a seqStmt for the inital assignment and the while loop. Then another seqstmt inside the while loop holding the loop body and 
+
 
 ## Exercise 2
 
 
 -- Part a: use this space to give a clear and concise description of your implementation of the conditional expression.
 
+Created LogicExpr in the grammar see above how it works. Moved ternary logic into Expr and Expr into LogicExpr. Created new tokens for ? and :.
 
 
 -- Part b: use this space to give a brief summary of what changes you would make to have assignment expressions rather than statements. 
+
 Add another layer to the expression grammar to create assignment exprs. These would be added at higher precendence than anything else
 
 ## Exercise 3
 
 -- Use this space to describe clearly and concisely your implementation. You should justify your decisions, e.g. how did you deal with identifiers that are not assigned values and the interpretation of Boolean operators in the integers?
-DFS the AST and evalulate everything. Identifiers that are not assigned raise errors and false is interpretted as 0 and true is interpretted as 1. The boolean operators are implemented using bitwise operators meaning that 
+
+DFS the AST and evalulate everything. Identifiers that are not assigned raise errors and false is interpretted as 0 and true is interpretted as 1. The boolean operators are implemented using bitwise operators which gives them extra functionality as well as the base functionality. However not is implemented as a boolean otherwise that would be breaking. Hashmap stores the variables all in the global scope
 

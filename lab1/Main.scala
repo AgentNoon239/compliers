@@ -20,7 +20,8 @@ object Main {
 	private def run(src: Iterator[String]): Unit = {
 		val parser = new Parser(new Lexer(src))
 		val tree = parser.parse()
+		println(tree)
 		val interpreter = new Interpreter(tree)
-		interpreter.execute()
+		interpreter.execute
 	}
 }

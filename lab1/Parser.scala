@@ -13,7 +13,7 @@ import cdim.error._
 class Parser (val tokens: Lexer) {
 
 	/* The main public method that produces a root node for the AST of trait Prog, which has a Stmt list as its children */
-	def parse(): Prog = {
+	def parse(): Program = {
 		val stmt_list = ListBuffer[Stmt]()
 		while(tokens.hasNext) {
 			stmt_list += parseStmt()
@@ -104,7 +104,7 @@ class Parser (val tokens: Lexer) {
 		val inner_list = ListBuffer[Stmt]()
 		inner_list += inner
 		inner_list += increment
-		stmt_list += WhileStmt(exprf, SeqStmt(inner_list))
+		stmt_list += WhileStmt(BinaryExpr(Variable(iterator.name), LESS_EQUAL, exprf), SeqStmt(inner_list))
 		SeqStmt(stmt_list)
 	}
 
