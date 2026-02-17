@@ -32,7 +32,7 @@ class Parser (val tokens: Lexer) {
 			case IDENT(name) => {
 				advance()
 				consume(EQUAL)
-				val e = expr()
+				val e = parseOr()
 				consume(SEMICOLON)
 				AssignStmt(name, e)
 			}
@@ -58,7 +58,7 @@ class Parser (val tokens: Lexer) {
 	/* Parses print statements */
 	private def parsePrint(): Stmt = {
 		consume(LEFT_PAREN)
-		val e = expr()
+		val e = parseOr()
 		consume(RIGHT_PAREN)
 		consume(SEMICOLON)
 		PrintStmt(e)
@@ -67,7 +67,7 @@ class Parser (val tokens: Lexer) {
 	/* Parses if statements and else statements greedily */
 	private def parseIf(): Stmt = {
 		consume(LEFT_PAREN)
-		val cond = expr()
+		val cond = parseOr()
 		consume(RIGHT_PAREN)
 		val thenst = parseStmt()
 		currentToken match {
@@ -79,11 +79,33 @@ class Parser (val tokens: Lexer) {
 	/* Parses while statements */
 	private def parseWhile(): Stmt = {
 		consume(LEFT_PAREN)
-		val cond = expr()
+		val cond = parseOr()
 		consume(RIGHT_PAREN)
 		WhileStmt(cond, parseStmt())
 	}
 
+	/* Boolean operations at lowest precedence - below relational operators */ 
+	private def parseOr(): Expr = {
+		parseOr2(parseAnd())
+	}
+
+	private def parseOr2(e: Expr): Expr = {
+		currentToken match {
+			case BINOP(OR) => {advance(); parseOr2(BinaryExpr(e, OR, parseAnd()))}
+			case _ => e
+		}
+	}
+
+	private def parseAnd(): Expr = {
+		parseAnd2(expr())
+	}
+
+	private def parseAnd2(e: Expr): Expr = {
+		currentToken match {
+			case BINOP(AND) => {advance(); parseAnd2(BinaryExpr(e, AND, expr()))}
+			case _ => e
+		}
+	}
 
 	/* The grammar in the specification in Notes.md is left-recursive so not appropriate */
 
@@ -118,7 +140,6 @@ class Parser (val tokens: Lexer) {
 		currentToken match {
 			case MINUS => {advance(); calcExpr2(BinaryExpr(e, SUBTRACT, term()))}
 			case BINOP(ADD) => {advance(); calcExpr2(BinaryExpr(e, ADD, term()))}
-			case BINOP(OR) => {advance(); calcExpr2(BinaryExpr(e, OR, term()))}
 			case _ => e
 		}
 	}
@@ -135,12 +156,11 @@ class Parser (val tokens: Lexer) {
 		currentToken match {
 			case BINOP(DIV) => {advance(); term2(BinaryExpr(e, DIV, factor()))}
 			case BINOP(TIMES) => {advance(); term2(BinaryExpr(e, TIMES, factor()))}
-			case BINOP(AND) => {advance(); term2(BinaryExpr(e, AND, factor()))}
 			case _ => e
 		}
 	}
 
-	/* Factor -> '(' Expr ')'
+	/* Factor -> '(' OrTerm ')'
 	           | 'IDENT' 
 	           | 'NUMBER'
 	           | '-' Factor
@@ -148,7 +168,7 @@ class Parser (val tokens: Lexer) {
 
 	private def factor(): Expr = {
 		currentToken match {
-			case LEFT_PAREN => {advance(); val e = expr(); consume(RIGHT_PAREN); e}
+			case LEFT_PAREN => {advance(); val e = parseOr(); consume(RIGHT_PAREN); e}
 			case IDENT(name) => {advance(); Variable(name)}
 			case NUMBER(value) => {advance(); Num(value)}
 			case MINUS => {advance(); UnaryExpr(UMINUS, factor())}

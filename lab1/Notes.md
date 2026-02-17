@@ -9,25 +9,27 @@ Program -> Stmts 'EOF'
 Stmts -> Stmt Stmts
 	| Stmt
 	| epsilon
-Stmt -> 'IDENT' '=' Expr ';'
+Stmt -> 'IDENT' '=' OrTerm ';'
 	| '{' Stmts '}'
-	| 'WHILE' '(' Expr ')' Stmt
-	| 'FOR' '(' 'IDENT' '=' Expr ';' Expr ';' Expr ')' Stmt
-	| 'IF' '(' Expr ')' Stmt 
-	| 'IF' '(' Expr ')' Stmt 'ELSE' Stmt
-	| 'PRINT' '(' Expr ')' ';'
+	| 'WHILE' '(' OrTerm ')' Stmt
+	| 'FOR' '(' 'IDENT' '=' OrTerm ';' OrTerm ';' OrTerm ')' Stmt
+	| 'IF' '(' OrTerm ')' Stmt 
+	| 'IF' '(' OrTerm ')' Stmt 'ELSE' Stmt
+	| 'PRINT' '(' OrTerm ')' ';'
 	| ';'
+OrTerm -> OrTerm '||' AndTerm
+	| AndTerm
+AndTerm -> AndTerm '&&' Expr
+	| Expr
 Expr -> Expr Relop CalcExpr
 	| CalcExpr
 CalcExpr -> CalcExpr '-' Term
 	| CalcExpr '+' Term
-	| CalcExpr '||' Term
 	| Term
 Term -> Term '\*' Factor
 	| Term '/' Factor
-	| Term '&&' Factor
 	| Factor
-Factor -> '(' Expr ')'
+Factor -> '(' OrTerm ')'
 	| 'IDENT' 
 	| 'NUMBER'
 	| '-' Factor
