@@ -65,14 +65,19 @@ The 'FOR' statement for concreteness is "for (name = expr1; expr2; expr3) stmt".
 
 -- Use this space to give a clear and concise description of the for loop statement.
 
+
 ## Exercise 2
 
 
 -- Part a: use this space to give a clear and concise description of your implementation of the conditional expression.
 
+
+
 -- Part b: use this space to give a brief summary of what changes you would make to have assignment expressions rather than statements. 
+Add another layer to the expression grammar to create assignment exprs. These would be added at higher precendence than anything else
 
 ## Exercise 3
 
 -- Use this space to describe clearly and concisely your implementation. You should justify your decisions, e.g. how did you deal with identifiers that are not assigned values and the interpretation of Boolean operators in the integers?
+DFS the AST and evalulate everything. Identifiers that are not assigned raise errors and false is interpretted as 0 and true is interpretted as 1. The boolean operators are implemented using bitwise operators meaning that 
 

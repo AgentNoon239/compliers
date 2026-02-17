@@ -44,7 +44,7 @@ class Interpreter (val prog: Prog) {
 			}
 		}
 
-	private def executeExpr(expr: Expr) = {
+	private def executeExpr(expr: Expr): Int = {
 		expr match {
 			case BinaryExpr(expr1, ADD, expr2) => {
 				executeExpr(expr1) + executeExpr(expr2)
@@ -77,16 +77,16 @@ class Interpreter (val prog: Prog) {
 				executeExpr(exp1) >= executeExpr(expr2)
 			}
 			case BinaryExpr(exp1, AND, expr2) => {
-				executeExpr(exp1) && executeExpr(expr2)
+				executeExpr(exp1) & executeExpr(expr2)
 			}
 			case BinaryExpr(exp1, OR, expr2) => {
-				executeExpr(exp1) || executeExpr(expr2)
+				executeExpr(exp1) | executeExpr(expr2)
 			}
 			case UnaryExpr(expr1, UMINUS) => {
 				-executeExpr(expr1)
 			}
 			case UnaryExpr(expr1, NOT) => {
-				!executeExpr(expr1)
+				executeExpr(expr1) == 0
 			}
 			case Variable(name: String) => {
 				variables.get(name) match {

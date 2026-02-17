@@ -97,7 +97,15 @@ class Parser (val tokens: Lexer) {
 		consume(SEMICOLON)
 		val exprinc = expr()
 		consume(RIGHT_PAREN)
-		ForStmt(iterator.name, iterator.expr, exprf, exprinc, parseStmt())
+		val stmt_list = ListBuffer[Stmt]()
+		stmt_list += iterator
+		val inner = parseStmt()
+		val increment = AssignStmt(iterator.name, BinaryExpr(Variable(iterator.name), ADD, exprinc))
+		val inner_list = ListBuffer[Stmt]()
+		inner_list += inner
+		inner_list += increment
+		stmt_list += WhileStmt(exprf, SeqStmt(inner_list))
+		SeqStmt(stmt_list)
 	}
 
 	/* The grammar in the specification in Notes.md is left-recursive so not appropriate */
