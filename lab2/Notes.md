@@ -18,24 +18,26 @@ Type -> int | bool
 Stmts -> Stmt Stmts
 	| Stmt
 	| epsilon
-Stmt -> Reference '=' Expr ';'
+Stmt -> Reference '=' OrTerm ';'
 	| '{' Decls Stmts '}'
-	| 'WHILE' '(' Expr ')' Stmt
-	| 'IF' '(' Expr ')' Stmt 
-	| 'IF' '(' Expr ')' Stmt 'ELSE' Stmt
-	| 'PRINT' '(' Expr ')' ';'
+	| 'WHILE' '(' OrTerm ')' Stmt
+	| 'IF' '(' OrTerm ')' Stmt 
+	| 'IF' '(' OrTerm ')' Stmt 'ELSE' Stmt
+	| 'PRINT' '(' OrTerm ')' ';'
 	| ';'
+OrTerm -> OrTerm '||' AndTerm
+	| AndTerm
+AndTerm -> AndTerm '&&' Expr
+	| Expr
 Expr -> Expr Relop CalcExpr
 	| CalcExpr
 CalcExpr -> CalcExpr '-' Term
 	| CalcExpr '+' Term
-	| CalcExpr '||' Term
 	| Term
 Term -> Term '\*' Factor
 	| Term '/' Factor
-	| Term '&&' Factor
 	| Factor
-Factor -> '(' Expr ')'
+Factor -> '(' OrTerm ')'
 	| Reference
 	| 'NUMBER'
 	| 'true'
@@ -44,8 +46,8 @@ Factor -> '(' Expr ')'
 	| "!" Factor
 Reference -> 'IDENT'
 	| 'IDENT' ExprList
-ExprList -> '[' Expr ']'
-	| '[' Expr ']' ExprList
+ExprList -> '[' CalcExpr ']'
+	| '[' CalcExpr ']' ExprList
 Relop -> '<' | '<=' | '>' | '>=' | '==' | '!='
 </pre>
 
