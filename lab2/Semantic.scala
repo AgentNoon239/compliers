@@ -23,28 +23,32 @@ class Semantic (val prog: Prog) {
 	/* Checks statements */
 	private def checkStmt(stmt: Stmt, env: HashMap[String, Stype]): Unit = {
 		stmt match {
-			case PrintStmt(expr) => ()
+			case PrintStmt(expr) => checkExpr(expr, env)
 			case WhileStmt(expr, stmt) => {
 				checkExpr(expr, env)
+				checkType(expr, Sbool)
 				checkStmt(stmt, env)
 			}
 			case IfStmt(expr, thenStmt, elseStmt)  => {
 				checkExpr(expr, env)
+				checkType(expr, Sbool)
 				checkStmt(thenStmt, env)
 				checkStmt(elseStmt, env)
 			}
 			case AssignStmt(expr1, expr2) => {
 				checkExpr(expr1, env)
 				checkExpr(expr2, env)
+				
+				checkType(expr1, expr2)
 			}
 			case SeqStmt(stmt_list) => {
 				stmt_list.foreach(i => checkStmt(i, env))
 			}
 			case BlockStmt(decl_list, stmt) => {
 				val innerHmap = new HashMap[String, Stype]()
-				decl_list.foreach(i => {
-					innerHmap(i.name) = i.stype
-				})
+				decl_list.foreach{
+					case Declr(name, stype, line) => {notInEnv(name, innerHmap, line); innerHmap+=(name -> stype)}
+				}
 				checkStmt(stmt, env.concat(innerHmap))
 			}
 			case EmptyStmt => ()
@@ -64,8 +68,16 @@ class Semantic (val prog: Prog) {
 				checkExpr(expr, env)
 				checkType(expr, stype)
 			}
-			case Variable(name, stype, line) => expr.stype = inEnv(name, env, line)
-			case ArrayElement(name, expr_list, stype, line) => ()
+			case Variable(name, stype, line) => {
+				var new_stype = inEnv(name, env, line)
+				if (!isPrimitive(new_stype)) {
+					throw new ParserException("Variable does not have basic type on line "+line)
+				}
+				expr.stype = new_stype
+			}
+			case ArrayElement(name, expr_list, stype, line) => {
+				expr.stype = checkArray(expr_list,env(name),line)
+			}
 			case Num(value, stype, line) => ()
 			case BoolV(value, stype, line) => ()
 		}
@@ -76,7 +88,13 @@ class Semantic (val prog: Prog) {
 	/* This will check two operands have same type -- this is useful for relational operators */
 	protected def checkType(expr1: Expr, expr2: Expr): Unit = {
 		if ((expr1.stype == expr2.stype)) () else throw ParserException("Type mismatch with expression on line " + expr1.line)
-	}
+	} _ => throw ParserException("Index is not integer on line "+line)
+				}
+				
+			}
+			case _ => {
+				if (!expr_list.isEmpty) {
+					
 
 	/* Checks if two operands have same type and it's equal to parameter stype -- useful for binary arithmetic in bool and int */
 	protected def checkType(expr1: Expr, expr2: Expr, stype: Stype): Unit = {
@@ -103,5 +121,36 @@ class Semantic (val prog: Prog) {
 			case None => ()
 			case Some(_) => throw ParserException("Error on line " + line + ": variable " + name + " has already been declared")
 		}
+	}
+
+	private def isPrimitive(stype: Stype): Boolean = {
+		stype match {
+			case Sbool => true
+			case Sinteger => true
+			case Svoid => true
+			case _ => false
+		}
+	}
+
+	private def checkArray(expr_list: ListBuffer[Expr], stype: Stype, line: Int): Stype = {
+		stype match {
+			case Sarray(length, stype2) => {
+				if (expr_list.isEmpty) {
+					throw ParserException("Too few indices for array on line "+line)
+				}
+				expr_list.head.stype match {
+					case Sinteger => checkArray(expr_list.tail, stype2,line)
+					case _ => throw ParserException("Index is not integer on line "+line)
+				}
+				
+			}
+			case _ => {
+				if (!expr_list.isEmpty) {
+					throw ParserException("Too many indices for array on line "+line)
+				}
+				return stype
+			}
+		}
+
 	}
 }
