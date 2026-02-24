@@ -88,13 +88,7 @@ class Semantic (val prog: Prog) {
 	/* This will check two operands have same type -- this is useful for relational operators */
 	protected def checkType(expr1: Expr, expr2: Expr): Unit = {
 		if ((expr1.stype == expr2.stype)) () else throw ParserException("Type mismatch with expression on line " + expr1.line)
-	} _ => throw ParserException("Index is not integer on line "+line)
-				}
-				
-			}
-			case _ => {
-				if (!expr_list.isEmpty) {
-					
+	}
 
 	/* Checks if two operands have same type and it's equal to parameter stype -- useful for binary arithmetic in bool and int */
 	protected def checkType(expr1: Expr, expr2: Expr, stype: Stype): Unit = {
