@@ -73,7 +73,10 @@ For if and while statements the condition expression must be of type bool. The r
 
 ## Exercise 1
 
+While and if statements had additional check to ensure guard resolves to a bool. Assign stmt checks type(LHS) = type(RHS). Declarations check do not exist at current scope and then adds to current scope.
+
 ## Exercise 2
 
-
+ Variable gets env assigned type and checks for primitive type. Primitive checking implemented using `isPrimitive` helper function.
+ Check array function implemented that recursively consumes indices and array dimensions at the same time.
 

@@ -6,6 +6,7 @@ import scala.collection.immutable.HashMap
 import scala.collection.mutable.ListBuffer
 import cdim.token._
 import cdim.ast._
+import cdim.error._
 
 class CodeGen(var tree: Prog) {
 
@@ -73,7 +74,19 @@ class CodeGen(var tree: Prog) {
 			case AssignStmt(expr1, expr2) => {
 				expr1 match {
 					case Variable(varName, stype, line) => {genExpr(expr2); (code ++= "STGW _" + varName + "\n")}
-					case ArrayElement(arrName, expr_list, stype, line) => ()
+					case ArrayElement(arrName, expr_list, stype, line) => {
+						genExpr(expr2);
+						code ++= "LDGW _" + arrName + "\n"
+						stype match {
+							case Sarray(_,stype2) => {
+								ravel(expr_list, stype2)
+							}
+							case _ => {
+								throw new ParserException("ArrayElement does not have type array")
+							}
+						}
+						code ++= "OFFSET\nLOADW"
+					}
 					case _ => ()
 				}
 			}
@@ -81,6 +94,24 @@ class CodeGen(var tree: Prog) {
 				for (stmt <- list) genStmt(stmt)
 			}
 		}
+	}
+
+
+	// Index i[8][3][4] at [2][1][3]. (2*[3][4][] + 1*[4][] + 3[] 
+
+	protected def ravel(expr_list: ListBuffer[Expr], stype: Stype): Unit = {
+		stype match {
+			case Sarray(length,stype2) => {
+				code ++= "CONST " + length + "\nTIMES\n"
+				genExpr(expr_list.head)
+				code ++= "ADD\n"
+				ravel(expr_list.tail, stype2)
+			}
+			case _ => {
+				code ++= "CONST 4\nTIMES"
+			}
+		}
+		
 	}
 
 	/* This method is for expressions when they are not conditions */
@@ -97,7 +128,9 @@ class CodeGen(var tree: Prog) {
 				genExpr(expr2)
 				(code ++= op.keiko + "\n")
 			}
-			case ArrayElement(name, expr_list, stype, line) => ()
+			case ArrayElement(name, expr_list, stype, line) => {
+				
+			}
 			case BoolV(0, _, _) => (code ++= "CONST 0\n")
 			case BoolV(_, _, _) => (code ++= "CONST 1\n")
 		}

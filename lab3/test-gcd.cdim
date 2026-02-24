@@ -1,6 +1,6 @@
 int a, b;
-b = 26;
-a = 13;
+b = 120;
+a = 64;
 while (a != b) {
 	if (a > b) {
 		a = a - b;

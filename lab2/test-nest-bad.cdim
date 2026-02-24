@@ -8,6 +8,7 @@ while ((right - left) < 1) {
 		bool i;
 		i = true;
 	} else {
+		bool i;
 		if (mid < number) {
 			i = mid;
 			left = mid + 1;
@@ -15,4 +16,5 @@ while ((right - left) < 1) {
 			right = mid - 1;
 		}
 	}
+	
 }
