@@ -7,3 +7,7 @@ Implement an interpreter for a simple imperative language. The starter files are
 ## Lab 2
 
 Implement semantic checks for a simple imperative language. The starter files are in the lab2 directory along with a markdown file that you should edit.
+
+## Lab 3
+
+Implement Keiko code generation for a simple imperative language. The starter files are in the lab3 directory along with a markdown file that you should edit. 
