@@ -2,5 +2,6 @@
 *.patch
 lab1/cdim/
 lab1/.DS_Store
+lab2/cdim/ast
 lab2/.DS_Store
 lab2/.DS_Store
