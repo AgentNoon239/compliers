@@ -41,7 +41,17 @@ class CodeGen(var tree: Prog) {
 	/* Stores Keiko code strings as a side effect in code by pattern matching on Stmt objects */
 	private def genStmt(stmt: Stmt): Unit = {
 		stmt match {
-			case WhileStmt(expr, stmt) => ()
+			case WhileStmt(expr, stmt) => {
+				var lab1 = genLabel()
+				var lab2 = genLabel()
+				var lab3 = genLabel()
+				labelPrint(lab1)
+				genExpr(expr,lab2,lab3)
+				labelPrint(lab2)
+				genStmt(stmt)
+				jumpPrint(lab1)
+				labelPrint(lab3)
+			}
 			case BlockStmt(decl_list, stmt) => ()
 			case IfStmt(expr, thenStmt, elseStmt) => {
 				val lab1 = genLabel()
