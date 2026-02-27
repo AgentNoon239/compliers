@@ -20,12 +20,12 @@ final case object EQUAL_EQUAL extends Op {
 final case object LESS extends Op {
 	override def toString: String = "<"
 	def relop = true
-	def keiko = "LEQ"
+	def keiko = "LT"
 }
 final case object LESS_EQUAL extends Op {
 	override def toString: String = "<="
 	def relop = true
-	def keiko = "LT"
+	def keiko = "LEQ"
 }
 final case object GREATER extends Op {
 	override def toString: String = ">"
