@@ -69,6 +69,8 @@ fn foo(int a, bool b, int c) {
 
 where a, b and c are the parameters. The braces denote the body of the function. The body of the function may have declarations of simple variables at the top (it may not have a declaration of a function inside of it). Below the declarations is a list of statements. 
 
+Note that, in the grammar, each parameter must be comma separated with a type in front from every other, just as in C. That is, in the declaration foo(int a, b) is not valid but foo(int a, int b) is.
+
 Functions have a single return type: integer. That is, all functions return integers. All functions must return. Thus an empty function body is not possible, unlike as suggested by the grammar above.
 
 Functions may be called and thus we have function expressions, e.g. foo(2, true, 3). Because functions return integers, we can only do integer arithmetic with these function expressions. 
