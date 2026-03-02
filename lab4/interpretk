@@ -1,0 +1,4 @@
+#!/bin/sh
+cd keiko
+./pplink -nostdlib ./lib.k ../a.k -o a.out
+./ppx ./a.out
