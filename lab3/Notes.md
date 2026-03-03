@@ -61,11 +61,17 @@ Then if the left-hand-side consists of an array element, the expressions inside 
 
 ## Exercise 1
 
+Implemented while loop with standard two label approach
+
 ## Exercise 2
+
+Exercise 2 is superceded by exercise 3
 
 ## Exercise 3
 
+Created ravel function to deal with multidimensional arrays
+
 ## Exercise 4
 
-
+Added env and aliasTable. When processing statement all decls are aliased in the alias table which makes all variables unique in the current scope. Note sibling variables share idenitifiers which does not cause problems. Passed env and alias table around whole generation system. Added new test
 
