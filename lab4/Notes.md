@@ -25,7 +25,7 @@ Stmts -> Stmt Stmts
 	| Stmt
 	| epsilon
 Stmt -> Reference '=' OrTerm ';'
-	| '{' Decls Stmts '}'
+	| '{' Stmts '}'
 	| 'WHILE' '(' OrTerm ')' Stmt
 	| 'IF' '(' OrTerm ')' Stmt 
 	| 'IF' '(' OrTerm ')' Stmt 'ELSE' Stmt
@@ -80,6 +80,8 @@ Functions may have expressions as inputs, as long as they evaluate to values of 
 All global variables and functions must be declared (and the latter initialised) before they can be used. This prevents the language from having mutual recursion. However, it is capable of some recursion.
 
 IMPORTANTLY, every program must have a function called "main" that takes no parameters. This is the entry point for the program. As with all programs, it needs to return an integer, by convention it can return 0 at the end of its body. The main function may have local variables, declared within its body. 
+
+Finally, local variables in functions are lexically scoped to that function. But there is no block scoping otherwise. That is, local variables can be declared within a function, but any further blocks cannot have declarations. This is indicated by the grammar above where Stmt -> '{' Stmts '}' just permits lists of statements and not further declarations.
 
 ## Exercise 1
 
