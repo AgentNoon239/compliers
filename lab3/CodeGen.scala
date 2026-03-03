@@ -222,7 +222,7 @@ class CodeGen(var tree: Prog) {
 	}
 
 	/* Mutable integer tracking labels */
-	private var label = 1;
+	private var label = 0;
 
 	/* This generates labels for conditional operations */
 	private def genLabel(): String = {label = label + 1; label.toString}
