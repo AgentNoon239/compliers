@@ -1,0 +1,12 @@
+int x;
+x = 5;
+if (x == 5) {
+	bool x;
+	x = false;
+	print(x);
+} else {
+	int y;
+	y = 3;
+}
+print(x);
+// print(y);

@@ -1,11 +1,11 @@
-int a, b;
-b = 120;
+int a, b_1;
+b_1 = 120;
 a = 64;
-while (a != b) {
-	if (a > b) {
-		a = a - b;
+while (a != b_1) {
+	if (a > b_1) {
+		a = a - b_1;
 	} else {
-		b = b - a;
+		b_1 = b_1 - a;
 	}
 }
 print(a);
