@@ -134,7 +134,6 @@ class CodeGen(var tree: Prog) {
 				code ++= "TIMES\n"
 			}
 		}
-		
 	}
 
 	/* This method is for expressions when they are not conditions */
@@ -196,7 +195,7 @@ class CodeGen(var tree: Prog) {
 			}
 			case BinaryExpr(expr1, OR, expr2, _, _) => {
 				val lab = genLabel()
-				genExpr(expr1, tlab, lab, env, aliasTable)
+				genExpr(expr1, tlab, lab, envcalcWidth, aliasTable)
 				labelPrint(lab)
 				genExpr(expr2, tlab, flab, env, aliasTable)
 			}

@@ -61,7 +61,7 @@ Then if the left-hand-side consists of an array element, the expressions inside 
 
 ## Exercise 1
 
-Implemented while loop with standard two label approach
+Implemented while loop with standard three label approach
 
 ## Exercise 2
 
