@@ -73,6 +73,9 @@ class Semantic (val prog: Prog) {
 					case _ => ()
 				}
 				checkBody(block, env_new, env_check)
+				if (!checkReturn(block)) {
+					throw new ParserException("Missing return in function "+name + " declared on line " + line)
+				}
 			}
 		}
 		env_init
@@ -100,6 +103,19 @@ class Semantic (val prog: Prog) {
 			}	
 		}
 		()
+	}
+
+	/* Checks statements instance by instance */
+	private def checkReturn(stmt: Stmt): Boolean = {
+		stmt match {
+			case IfStmt(expr, thenStmt, elseStmt) => {
+				checkReturn(thenStmt) && checkReturn(elseStmt)
+			}
+			case SeqStmt(stmt_list) => stmt_list.exists(checkReturn)
+			case BlockStmt(decl_list, bStmt) => checkReturn(bStmt)
+			case ReturnStmt(expr) => true
+			case _ => false
+		}
 	}
 
 	/* Checks statements instance by instance */
@@ -179,7 +195,19 @@ class Semantic (val prog: Prog) {
 	}
 
 	/* Helper functions - first we overload a type checker */
-
+		var offsets = HashMap[String, Int]()
+		var offset = 16
+		// Complete function
+		param_list.foreach(i => {
+			i match {
+				case Par(name, stype) => {
+					offsets += (name -> offset)
+					offset += 4
+				}
+				case EmptyPar => {}
+			}
+		})
+		offsets
 	/* This will check two operands have same type -- this is useful for relational operators */
 	protected def checkType(expr1: Expr, expr2: Expr): Unit = {
 		if ((expr1.stype == expr2.stype)) () else throw ParserException("Type mismatch with expression on line " + expr1.line)

@@ -85,8 +85,12 @@ Finally, local variables in functions are lexically scoped to that function. But
 
 ## Exercise 1
 
+Created offsetParam that starts at 16 and increments by -4 each time for each parameter. Ordering is preserved.
 
 ## Exercise 2
 
+Recursive function that checks to make sure that code will return using following rules. For each seqStmt there must be at least one statement that will return. For if both branches must return. For return statements they always return. Anything else does not return. If at the top level of the function that statement returns then the function will always return.
 
 ## Exercise 3
+
+Added local variables starting at index 0 and decrements by -4 each time. Adjusted function definiton to have 4n bytes of space for locals where n is the number of locals since all variables are the same size.

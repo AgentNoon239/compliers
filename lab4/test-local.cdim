@@ -1,0 +1,15 @@
+fn f(int a, int b) {
+	int c;
+	int d; 
+	c = 3;
+	d = 4;
+	print(a);
+	print(b);
+	print(c);
+	print(d);
+	return 0;
+}
+
+fn main() {
+	return f(1,2);
+}

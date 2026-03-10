@@ -98,7 +98,7 @@
 #define NORETURN __attribute__ ((noreturn))
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "matty.hoban@cs.ox.ac.uk unless you can fix it by lookign at the a.k file"
+#define PACKAGE_BUGREPORT "Look at the file a.k to check what happened"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "obc"
@@ -110,7 +110,7 @@
 #define PACKAGE_TARNAME "obc"
 
 /* Bug tracker */
-#define PACKAGE_TRACKER ""
+#define PACKAGE_TRACKER "https://bitbucket.org/Spivey/obc-3/issues"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

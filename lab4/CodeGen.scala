@@ -38,6 +38,8 @@ class CodeGen(var tree: Prog) {
 		var offsets = offsetParam(param_list)
 		block match {
 			case BlockStmt(decls_list, stmt) => {
+				locals = decls_list.size * 4
+				offsets = offsetLocal(decls_list,offsets)
 				if (name == "main") {
 					(code ++= s"FUNC MAIN ${locals}\n")
 				} else {
@@ -55,7 +57,8 @@ class CodeGen(var tree: Prog) {
 				}
 				genStmt(x, offsets)
 				(code ++= "RETURN\n\n")
-				(code ++= "END\n\n")
+				(code ++= "END\offset -= 4
+			i match n\n")
 			}
 		}
 	}
@@ -63,7 +66,34 @@ class CodeGen(var tree: Prog) {
 	/* Calculates offsets for parameters and stores in hash table */
 	private def offsetParam(param_list: ListBuffer[Paren]): HashMap[String, Int] = {
 		var offsets = HashMap[String, Int]()
+		var offset = 16
 		// Complete function
+		param_list.foreach(i => {
+			i match {
+				case Par(name, stype) => {
+					offsets += (name -> offset)
+					offset += 4
+				}
+				case EmptyPar => {}
+			}
+		})
+		offsets
+	}
+
+	private def offsetLocal(decl_list: ListBuffer[Decl],offsets0: HashMap[String, Int]): HashMap[String, Int] = {
+		var offset = 0
+		var offsets = offsets0
+		decl_list.foreach(i => {
+			offset -= 4
+			i match {
+				case VarDecl(name, _, __) => {
+					offsets += (name -> offset)
+				}
+				case _ => {
+					throw ParserException("Non VarDecl found")
+				}
+			}
+		})
 		offsets
 	}
 

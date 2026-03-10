@@ -1,4 +1,6 @@
 fn gcd(int a, int b) {
+	print(a);
+	print(b);
 	while (a != b) {
 		if (a > b) {
 			a = a - b;
